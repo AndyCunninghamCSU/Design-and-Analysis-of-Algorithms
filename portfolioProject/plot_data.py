@@ -6,10 +6,11 @@
 # contains all of the plotting functions to visualize data
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 def plot_healthy_faulted(t_healthy, signal_healthy, freqs_healthy_FFT, mag_healthy_FFT,
                          t_faulted, signal_faulted, freqs_faulted_FFT, mag_faulted_FFT,
-                         dtw_matrix, optimal_path):
+                         dtw_matrix, optimal_path, fault_flags):
     # Plot in 2x3 grid: 
     # Healthy (top left), Healthy FFT (middle left), DTW Heatmap (bottom left)
     # Faulted (top right), Faulted FFT (bottom right), optim
@@ -58,6 +59,15 @@ def plot_healthy_faulted(t_healthy, signal_healthy, freqs_healthy_FFT, mag_healt
     plt.xlabel("Frequency (Hz)")
     plt.ylabel("Magnitude")
     plt.grid(True)
+
+    plt.subplot(3, 2, 6)
+    fault_freqs, fault_magnitudes = zip(*fault_flags)  # Unpack into two separate lists
+    plt.stem(fault_freqs, fault_magnitudes, basefmt=" ", linefmt="C1-", markerfmt="C1o")
+    plt.xticks(np.arange(0, max(fault_freqs)+25,25))
+    plt.xlabel("Frequency (Hz)")
+    plt.ylabel("Magnitude Difference")
+    plt.grid(True)
+    plt.title("Fault Detection Summary")
 
     plt.tight_layout()
     plt.show()
